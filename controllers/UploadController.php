@@ -81,10 +81,21 @@ class UploadController extends Controller
         $wholesale=MyTable::find()
             ->average('wholesale');
 
+        $maxPrice=MyTable::findBySql("SELECT * FROM `catalog`
+         WHERE `price` NOT LIKE '%с%'
+         ORDER BY CAST(`price` AS UNSIGNED INTEGER)DESC
+         LIMIT 1")
+            ->one();
+
+        $maxwholesale=MyTable::findBySql("SELECT * FROM `catalog`
+         WHERE `wholesale` NOT LIKE '%v%'
+         ORDER BY CAST(`wholesale` AS UNSIGNED INTEGER)
+         LIMIT 1")
+            ->one();
+
 //        echo '<pre>';
 //        var_dump( $maxPrice);
 //        die();
-
 
         return $this->render('table',
             [
@@ -93,8 +104,8 @@ class UploadController extends Controller
                 'availability2'=>$availability2,
                 'priceAvg'=>$priceAvg,
                 'wholesale'=>$wholesale,
-//                'maxPrice'=>$maxPrice,
-//                'maxwholesale'=>$maxwholesale,
+                'maxPrice'=>$maxPrice,
+                'maxwholesale'=>$maxwholesale,
             ]);
     }
 
